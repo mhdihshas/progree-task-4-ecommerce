@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Secure e-commerce sandbox project for Progree internship Task 4." />
+  <title>NovaCart | Secure E-Commerce Sandbox</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">NovaCart<span>.</span></a>
+
+    <div class="top-actions">
+      <span id="userLabel" class="user-label">Guest</span>
+      <button id="authButton" class="btn ghost" type="button">Login / Register</button>
+      <button id="logoutButton" class="btn ghost hidden" type="button">Logout</button>
+      <button id="cartButton" class="btn primary" type="button">
+        Cart <span id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">PROGREE INTERNSHIP • TASK 4</p>
+      <h1>Secure E-Commerce <span>Checkout Sandbox</span></h1>
+      <p>
+        JWT authentication, hashed credentials, persistent SQLite cart,
+        Stripe test checkout, and backend inventory adjustment.
+      </p>
+    </section>
+
+    <section class="store-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">PRODUCT CATALOG</p>
+          <h2>Developer essentials</h2>
+        </div>
+        <span id="apiStatus" class="status offline">API checking...</span>
+      </div>
+
+      <div id="productGrid" class="product-grid"></div>
+      <div id="productState" class="state-card">Loading products...</div>
+    </section>
+  </main>
+
+  <div id="overlay" class="overlay hidden"></div>
+
+  <aside id="authPanel" class="side-panel hidden" aria-label="Authentication panel">
+    <button class="close-btn" data-close-panel type="button">×</button>
+
+    <div class="tabs">
+      <button id="loginTab" class="tab active" type="button">Login</button>
+      <button id="registerTab" class="tab" type="button">Register</button>
+    </div>
+
+    <form id="loginForm">
+      <h2>Welcome back</h2>
+      <label>
+        Email
+        <input id="loginEmail" type="email" required />
+      </label>
+      <label>
+        Password
+        <input id="loginPassword" type="password" required />
+      </label>
+      <button class="btn primary full" type="submit">Login</button>
+    </form>
+
+    <form id="registerForm" class="hidden">
+      <h2>Create account</h2>
+      <label>
+        Name
+        <input id="registerName" type="text" minlength="2" required />
+      </label>
+      <label>
+        Email
+        <input id="registerEmail" type="email" required />
+      </label>
+      <label>
+        Password
+        <input id="registerPassword" type="password" minlength="6" required />
+      </label>
+      <button class="btn primary full" type="submit">Register</button>
+    </form>
+
+    <p id="authMessage" class="message"></p>
+  </aside>
+
+  <aside id="cartPanel" class="side-panel cart-panel hidden" aria-label="Shopping cart">
+    <button class="close-btn" data-close-panel type="button">×</button>
+
+    <p class="eyebrow">PERSISTENT CART</p>
+    <h2>Your cart</h2>
+
+    <div id="cartItems" class="cart-items"></div>
+    <div id="cartEmpty" class="state-card">Your cart is empty.</div>
+
+    <div class="cart-summary">
+      <div>
+        <span>Total</span>
+        <strong id="cartTotal">$0.00</strong>
+      </div>
+      <button
+  id="checkoutButton"
+  class="btn primary full"
+  type="button"
+  onclick="startCheckout()"
+>
+  Secure Test Checkout
+</button>
+      <p class="sandbox-note">Stripe Test Mode — no real payment is charged.</p>
+    </div>
+
+    <p id="cartMessage" class="message"></p>
+  </aside>
+
+  <template id="productTemplate">
+    <article class="product-card">
+      <div class="product-art">NC</div>
+      <div class="product-body">
+        <span class="stock"></span>
+        <h3 class="product-name"></h3>
+        <p class="product-description"></p>
+        <div class="product-footer">
+          <strong class="product-price"></strong>
+          <button class="btn primary add-btn" type="button">Add to cart</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>

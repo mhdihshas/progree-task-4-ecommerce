@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Complete | NovaCart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="success-page">
+  <main class="success-card">
+    <div class="success-icon">✓</div>
+    <p class="eyebrow">STRIPE SANDBOX</p>
+    <h1 id="successTitle">Verifying payment...</h1>
+    <p id="successMessage">
+      Please wait while the backend verifies the Stripe Checkout Session.
+    </p>
+    <div id="orderInfo" class="order-info hidden"></div>
+    <a class="btn primary" href="index.html">Back to Store</a>
+  </main>
+
+  <script>
+    const API_BASE = "http://127.0.0.1:8000";
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+
+    const title = document.getElementById("successTitle");
+    const message = document.getElementById("successMessage");
+    const orderInfo = document.getElementById("orderInfo");
+
+    async function confirmOrder() {
+      if (!sessionId) {
+        title.textContent = "Missing checkout session";
+        message.textContent = "No Stripe Checkout Session ID was provided.";
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${API_BASE}/api/checkout/confirm?session_id=${encodeURIComponent(sessionId)}`,
+          {
+            method: "POST",
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.detail || "Could not confirm payment");
+        }
+
+        title.textContent = "Payment verified";
+        message.textContent =
+          "The order was completed and inventory was updated by the backend.";
+
+        orderInfo.classList.remove("hidden");
+        orderInfo.innerHTML = `
+          <strong>Order #${data.order_id}</strong>
+          <span>Total: $${(data.total_cents / 100).toFixed(2)}</span>
+        `;
+      } catch (error) {
+        title.textContent = "Verification failed";
+        message.textContent = error.message;
+      }
+    }
+
+    confirmOrder();
+  </script>
+</body>
+</html>
